@@ -22,9 +22,35 @@ jobs:
       - name: Run Bandit Scan
         run: bandit -ll -ii -r . -f json -o sast-report.json
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload Bandit Report
+        uses: actions/upload-artifact@v3.1.2
         if: always()
         with:
           name: sast-findings
           path: sast-report.json
+
+  sca_scan:
+    name: Run Safety for SCA
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install Safety
+        run: pip install safety
+
+      - name: Run Safety
+        run: safety check -r requirements.txt --output json > safety-report.json
+
+      - name: Upload Safety Report
+        uses: actions/upload-artifact@v3.1.2
+        if: always()
+        with:
+          name: safety-findings
+          path: safety-report.json
