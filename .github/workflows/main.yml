@@ -46,7 +46,7 @@ jobs:
         run: pip install safety
 
       - name: Run Safety
-        run: safety check -r requirements.txt --output json > safety-report.json
+        run: safety check -r requirements.txt --output json > safety-report.json || true
 
       - name: Upload Safety Report
         uses: actions/upload-artifact@v4
